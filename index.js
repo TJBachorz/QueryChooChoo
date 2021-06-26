@@ -1,3 +1,9 @@
+import { createRequire } from 'module';
+
+import { root } from './api-routes/routes.js';
+
+const require = createRequire(import.meta.url);
+
 const app = require('express')();
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql');
@@ -5,24 +11,23 @@ const compression = require('compression');
 app.use(compression());
 
 const schema = buildSchema(`
+    type Mutation {
+        setMessage(message: String): String
+    }
+
     type Query {
         hello: String
-        rollDice(numDice: Int!, numSides: Int): [Int]
+        getDie(numSides: Int): RandomDie
+        quoteOfTheDay: String
+        random: Float!
+    }
+
+    type RandomDie {
+        numSides: Int!
+        rollOnce: Int!
+        roll(numRolls: Int!): [Int]
     }
 `);
-
-const root = {
-    hello: () => {
-        return 'Hello world!';
-    },
-    rollDice: ({ numDice, numSides}) => {
-        let output = [];
-        for (let i=0; i < numDice; i++) {
-            output.push(1 + Math.floor(Math.random() * ( numSides || 6)));
-        }
-        return output;
-    }
-};
 
 app.use('/graphql', graphqlHTTP({
     schema: schema,
