@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 
-import { root } from './api-routes/routes.js';
+import { root } from './api-routes/router.js';
 import { schema } from './schema/schema.js';
 
 const require = createRequire(import.meta.url);
