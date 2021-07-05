@@ -22,6 +22,7 @@ export const schema = buildSchema(`
     }
 
     type Query {
+        ip: String
         hello: String
         getDie(numSides: Int): RandomDie
         getMessage(id: ID!): Message

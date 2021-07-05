@@ -9,8 +9,13 @@ const app = require('express')();
 const { graphqlHTTP } = require('express-graphql')
 const compression = require('compression');
 
-app.use(compression());
+const loggingMiddleware = (request, response, next) => {
+    console.log('ip:', request.ip);
+    next();
+}
 
+app.use(compression());
+app.use(loggingMiddleware);
 app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
